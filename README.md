@@ -13,7 +13,7 @@ game updates.
 index.html        the hub
 style.css         everything
 projects/*.html   one build-notes page per project
-shots/            card art (empty for now, cards fall back to CSS gradients)
+shots/            screenshots, 1280x720, one per project
 ```
 
 ## Preview locally
@@ -22,23 +22,16 @@ shots/            card art (empty for now, cards fall back to CSS gradients)
 python -m http.server 8099
 ```
 
-## Publishing
+## Design
 
-This needs to live in a repo named `Sevin47.github.io` for it to serve from the
-bare root.
-
-```bash
-git init && git add . && git commit -m "Project hub"
-gh repo create Sevin47.github.io --public --source=. --push
-```
-
-Then Settings > Pages > deploy from `main` / root.
+Warm paper background, IBM Plex Sans for text, JetBrains Mono for labels, one
+burnt-orange accent. Light and dark both defined; the page follows the reader's
+system setting. All foreground and background pairs clear WCAG AA.
 
 ## Adding a project
 
-Copy any file in `projects/`, then add a card to the grid in `index.html`. Add a
-thumb class in `style.css` if you want a different gradient, or drop an image in
-`shots/` and set it as the `.thumb` background.
+Drop a 1280x720 screenshot in `shots/`, copy any file in `projects/`, then add a
+row to the grid in `index.html`. Rows alternate image side automatically.
 
 ## Not listed yet
 

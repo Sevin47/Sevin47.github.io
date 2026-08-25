@@ -4,69 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Orrery: build notes</title>
-<meta name="description" content="How Orrery was built: a real task tracker rendered as a galaxy, planets generated deterministically from project identity, and finished work that becomes permanent.">
+<meta name="description" content="Notes on building Orrery: a real task tracker drawn as a galaxy, where finished work is the thing that accumulates on screen.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
-<div class="wrap narrow">
-  <a class="backlink" href="../index.html">&larr; all projects</a>
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
 
-  <article>
+  <article class="notes">
     <h1>Orrery</h1>
-    <p class="sub">A project tracker rendered as a personal galaxy.</p>
+    <p class="standfirst">A project tracker drawn as a personal galaxy.</p>
 
-    <div class="meta">
-      <a class="btn btn-primary" href="https://sevin47.github.io/orrery/">Open it</a>
-      <a class="btn" href="https://github.com/Sevin47/orrery">Source</a>
-      <span class="tag">Three.js</span>
-      <span class="tag">Local first</span>
+    <div class="toolbar">
+      <a class="play" href="https://sevin47.github.io/orrery/">Open it</a>
+      <a class="quiet" href="https://github.com/Sevin47/orrery">Source</a>
+      <a class="quiet" href="../index.html">All projects</a>
     </div>
 
-    <h2>The idea</h2>
-    <p>Every project is a planet. Every task you finish becomes a physical fragment of that planet. Everything still open orbits it as stardust until you crystallize it, at which point the dust spirals in and the planet visibly grows.</p>
-    <p>The point is to make finished work permanent and visible. Most trackers are built around what is still outstanding, and the reward for completing something is that it disappears from the list.</p>
+    <p class="lead">Every project is a planet. Every task you finish becomes a piece of that planet. Everything still open orbits it as dust until you crystallize it, and then the dust spirals in and the planet grows.</p>
+    <p>The point is to make finished work permanent and visible. Most trackers are built around what is still outstanding, so the reward for completing something is watching it disappear off a list.</p>
 
-    <div class="callout">
-      <span class="label">The one rule</span>
-      <p>It tracks my actual work. That kept it honest. A parody of a dashboard would have been easier to build and I would have stopped opening it within a week.</p>
-    </div>
+    <figure>
+      <img src="../shots/orrery.png" alt="Named planets of different sizes arranged around a central light in a dark starfield." width="1280" height="720">
+      <figcaption>Eight worlds, sized by how much of each one is finished. Demo data, not my real board.</figcaption>
+    </figure>
 
-    <h2>Art direction, decided before any code</h2>
-    <p>Serene and cosmic. Deep blues, nebulas, ambient sound. Not neon, not synthwave, not cartoonish. Navigation is click and zoom with the camera gliding, with no ship and no free flight, because free flight turns a calm space into a chore.</p>
-    <p>Finishing a project gets a quiet celebration: a bloom of light and a gentle chime, then a soft three note chord if it was the last task. It is deliberately not a fireworks show.</p>
+    <h2>It tracks real work</h2>
+    <p>That is the rule that kept it honest. A parody of a dashboard would have been quicker to build, and I would have stopped opening it inside a week.</p>
+
+    <h2>Decided before any code</h2>
+    <p>Serene and cosmic. Deep blues, nebulas, ambient sound, no neon and nothing cartoonish. Navigation is click and zoom with the camera gliding, with no ship and no free flight, because free flight turns a calm space into a chore. Finishing a project gets a bloom of light and a soft chime rather than a fireworks show.</p>
 
     <h2>Planets generate themselves</h2>
-    <p>Planet appearance is deterministic from the project id, so a project always looks like itself. Hue sits in a teal to blue to violet range, with latitude banding, polar caps and scattered bright faces that read as cities of light.</p>
-    <p>The parts that change are the parts that should. Radius grows with the number of completed tasks. Rings appear at eight crystallized tasks. A brand new project with nothing done renders as a small pulsing molten core, which is the closest thing the app has to an empty state.</p>
+    <p>Appearance is deterministic from the project id, so a project always looks like itself, with hue in a teal to violet range, latitude banding, polar caps and scattered bright faces that read as cities.</p>
 
-    <h2>The interactions</h2>
-    <ul>
-      <li>Selecting a planet glides the camera in and <strong>splits it apart</strong> into its fragments. Each fragment is one completed task, and clicking one shows what it was.</li>
-      <li>Open tasks orbit as 64 particle clusters, each at its own radius, speed and inclination.</li>
-      <li>Crystallizing spirals the dust inward over about 1.35 seconds, then the planet rebuilds with the new fragment in place.</li>
-      <li>Leaving the view reassembles the planet.</li>
-    </ul>
-    <p>Everything saves to local storage, debounced, and stays there until deleted. There is no account and no sync.</p>
-
-    <h2>Accessibility in a scene like this</h2>
-    <p><code>prefers-reduced-motion</code> slows the rotation, disables the parallax drift and skips the dust spiral animation entirely. Ambient audio is off by default and only starts on a real click, which browsers require anyway. Panels dock to the bottom below 640 pixels.</p>
-    <p>An ambient 3D scene has more ways to be unpleasant than a normal page, and most of them are motion.</p>
-
-    <h2>What is still missing</h2>
-    <p>Being honest about a personal tool: there is no task editing after creation, only complete, uncomplete and delete. Overdue only shows as amber text in the detail panel and does nothing in the 3D scene. Planet positions shift when you delete a project, because layout is index based rather than id stable. And it is still one 1,100 line component that wants breaking up.</p>
-
-    <h2>What I would tell someone building this</h2>
-    <ul>
-      <li>Deterministic generation from a stable id is what makes a generated thing feel like a place rather than a screensaver.</li>
-      <li>Make completion the thing that accumulates on screen. A list that shrinks when you succeed is a strange reward.</li>
-      <li>If you build a tool for yourself, put your real data in it immediately. The fake version will lie to you about what it needs.</li>
-    </ul>
+    <h2>What is missing</h2>
+    <p>Being honest about a personal tool: there is no task editing after creation, only complete, uncomplete and delete. Overdue shows as amber text in a panel and does nothing in the scene. Planet positions shift when you delete a project, because the layout is index based rather than tied to ids. And it is still one file of about eleven hundred lines that wants breaking up.</p>
   </article>
 </div>
 
 <footer>
-  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">github.com/Sevin47</a></div>
 </footer>
 
 </body>
