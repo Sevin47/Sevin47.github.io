@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orebound: build notes</title>
+<meta name="description" content="How Orebound was built: paying for impacts instead of time, why upgrade density falls off at 1/d, and the measurement that hid the fastest ball in the game.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap narrow">
+  <a class="backlink" href="../index.html">&larr; all projects</a>
+
+  <article>
+    <h1>Orebound</h1>
+    <p class="sub">Dig through a vast pixel world to find the one golden pixel.</p>
+
+    <div class="meta">
+      <a class="btn btn-primary" href="https://sevin47.github.io/orebound/">Play it</a>
+      <a class="btn" href="https://github.com/Sevin47/orebound">Source</a>
+      <span class="tag">One HTML file</span>
+      <span class="tag">No dependencies</span>
+    </div>
+
+    <h2>The idea</h2>
+    <p>You shoot balls into solid rock. They bounce around, they break pixels, and every pixel you break is currency for firing more balls. Buried out in the world are rare upgrade pixels that unlock new ball types, and somewhere in all of it is a single golden one. Find that and the run is over.</p>
+    <p>The whole thing is one <code>index.html</code>. No build step, no dependencies, no server. You can save the file and open it.</p>
+
+    <h2>Paying for impacts instead of time</h2>
+    <p>This is the decision everything else hangs off. Firing a ball costs a flat price and buys a <strong>fixed number of impacts</strong>, rather than a fixed amount of time in the air.</p>
+    <p>It means I never had to hand-tune a cost curve. Rock gets harder the further out you erode, so the pixels you get back per shot decay on their own, and they keep decaying until you find an upgrade that raises your damage. The board is the cost curve.</p>
+
+    <div class="callout">
+      <span class="label">The bug it killed</span>
+      <p>In an earlier build, travel speed multiplied bounce rate, bounce rate multiplied damage, and damage drove income. Speed was quietly the strongest damage upgrade in the game and nothing in the interface said so. Paying for impacts cuts that chain at the first link. Speed is now just how a ball feels.</p>
+    </div>
+
+    <h2>Why upgrades thin out at 1/d</h2>
+    <p>Upgrade points cannot be bought. They are buried, and digging is the only way to get them, which makes their density the pacing of the entire game.</p>
+    <p>Spreading them at a uniform density seems obvious and is wrong. Uniform density scales with <em>area</em>, so the number of upgrades inside radius <code>r</code> grows as <code>r&sup2;</code>. You either drown in upgrades late or starve early, depending on where you set the dial.</p>
+    <p>At a density of <code>1/d</code> the count grows linearly with <code>r</code>, so upgrades keep arriving at a steady pace no matter how far out you have dug.</p>
+
+    <h2>The price is the cap</h2>
+    <p>There is no limit on how many balls you can have in flight. Instead, every ball of a colour already out there makes the next one of that colour more expensive, so your swarm settles wherever your income can sustain it and only grows when income does.</p>
+
+    <div class="table-scroll">
+    <table>
+      <tr><th>Orange balls in flight</th><th>0</th><th>10</th><th>25</th><th>50</th></tr>
+      <tr><td>Price of the next one</td><td>8</td><td>14</td><td>28</td><td>92</td></tr>
+    </table>
+    </div>
+
+    <p>Each ball has its own growth rate, which lets the premium ones limit themselves hard. Rush climbs at 1.12 per ball and becomes unaffordable past a dozen or so. The starter climbs at 1.05 and can fill the whole arena.</p>
+    <p>Unspent impacts get refunded. You paid for impacts, so a ball that drifts off into open cavern and retires without landing any was never given what you bought. Before the refund existed, somewhere between 59% and 73% of every ticket price was being silently burned, which stalled the opening completely.</p>
+
+    <h2>The measurement that hid the fastest ball</h2>
+    <p>I tuned ball speeds off reference footage, frame by frame, converting pixels per frame into cells per second using the on-screen block pitch. One early pass recorded the purple ball at 2.5 cells per second and I concluded the game had no fast ball at all.</p>
+    <p>The tracker only matched a ball to its next position if it had moved less than 90% of one block that frame. Purple crosses several blocks per frame, so the one ball fast enough to matter was being filtered out of its own measurement. With the cap removed it came back at <strong>58 cells per second median, 70 at peak</strong>. It is a railgun.</p>
+    <p>The same pass found the balls were being drawn about three times too large. Measured across three scenes they render at roughly a quarter of a block, and they had been sitting at 0.8.</p>
+
+    <h2>Aiming</h2>
+    <p>Press where you want to launch from, drag back away from your target, release. The ball goes opposite the pull, and the further you draw the harder it leaves.</p>
+    <p>The first version of this was quantised badly enough to feel broken: full power under six cells of drag, then 30% at six cells. A 3.3&times; cliff off one pixel of mouse movement. It now runs at 0.5% per screen pixel with a 25% floor and full draw at 200 pixels, and the largest step between adjacent samples is 1.71%.</p>
+    <p>Measuring in screen pixels rather than world cells matters more than it sounds. Zoom ranges from about 2 to 40 pixels per cell, so a threshold set in cells is a flick when you are zoomed out and an arm's length when you are zoomed in.</p>
+
+    <h2>What I would tell someone building this</h2>
+    <ul>
+      <li>Pick the unit you sell carefully. Selling impacts instead of seconds removed an entire class of balance problem.</li>
+      <li>If a measurement tool has a threshold in it, check what the threshold is throwing away before you trust the result.</li>
+      <li>Density that scales with area will not pace a game where the player expands outward.</li>
+    </ul>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+</footer>
+
+</body>
+</html>

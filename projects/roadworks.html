@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadworks: build notes</title>
+<meta name="description" content="How Roadworks was built: real road centrelines, a co-op multiplier that rewards crowding, and a whole multiplayer game with no game server.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap narrow">
+  <a class="backlink" href="../index.html">&larr; all projects</a>
+
+  <article>
+    <h1>Roadworks</h1>
+    <p class="sub">A shared, real-time game about keeping the roads open.</p>
+
+    <div class="meta">
+      <a class="btn btn-primary" href="https://sevin47.github.io/roadworks/">Play it</a>
+      <a class="btn" href="https://github.com/Sevin47/roadworks">Source</a>
+      <span class="tag">Supabase</span>
+      <span class="tag">Real GIS data</span>
+    </div>
+
+    <h2>The idea</h2>
+    <p>You play a county manager. A new work board appears every morning, you dispatch crews to it, and the whole office works the same board. The more crews on a job, the faster it closes.</p>
+    <p>The design bet was that the real data is the game. Every mechanic either makes the daily board more interesting to act on or gives you a reason to come back for tomorrow's. Anything that could have existed in a generic clicker got cut.</p>
+
+    <h2>What is real and what is invented</h2>
+    <div class="table-scroll">
+    <table>
+      <tr><th></th><th></th></tr>
+      <tr><td><strong>The roads</strong></td><td>Real. Measured public state GIS centrelines, so a work zone sits at genuine milepoints on a road that exists, and a crew drives an actual route to reach it.</td></tr>
+      <tr><td><strong>The garages</strong></td><td>Real locations, invented names. The facility points come from public infrastructure data, because a crew rolling out of a garage that is really there is the whole appeal. Each one is renamed from its geography.</td></tr>
+      <tr><td><strong>The weather</strong></td><td>Real. Live National Weather Service alerts drive storm mode.</td></tr>
+      <tr><td><strong>The work</strong></td><td>Invented. Activities come from a generic maintenance catalogue placed at generated milepoints. Nothing is copied from anyone's published schedule.</td></tr>
+    </table>
+    </div>
+    <p>It is an unofficial hobby project, not affiliated with or endorsed by any transportation agency, and it reads public open data endpoints only.</p>
+
+    <h2>No game server</h2>
+    <p>There is no resident process anywhere in this project. The browser talks to Postgres, every mutation is a <code>security definer</code> RPC, and progress is derived from timestamps instead of a tick loop. A scheduled job builds each day's board and another watches the weather. In between, nothing has to be running.</p>
+    <p>That was a hard constraint from the start rather than a fallback. If a mechanic needed something resident to stay alive, the mechanic was designed wrong and got reworked.</p>
+    <p>The board is seeded from the date, so a given day always generates the same board no matter how many times the job runs. Every day is different, and the mix shifts with the season.</p>
+
+    <h2>The crowd multiplier</h2>
+    <p>Effort is measured in crew-seconds. Put <code>n</code> crews on one job and they produce <code>n &times; (1 + 0.12(n&minus;1))</code> work per second, capped at 3&times;. Six coworkers piling onto one job beat six people working alone, and everyone who contributed shares the XP and the budget.</p>
+
+    <div class="callout">
+      <span class="label">The rule I would not break</span>
+      <p>No mechanic is allowed to make a player unhappy to see another crew arrive on their job. Competition happens between districts and never inside a job. Every idea that failed that test got thrown out, including some good ones.</p>
+    </div>
+
+    <h2>Territory, and why it is district rather than county</h2>
+    <p>Your county is who you are. It is your name tag, your headquarters and where your crews start from, and working your own county pays 25% more XP. Your district is where you are allowed to work.</p>
+    <p>A hard county lock was the original plan and the data killed it. On a typical day 15 of 55 counties have fewer than 6 work orders, and a couple have had exactly one. A player who picked one of those has nothing to do by 9am. District turf also lets coworkers who chose different counties pile onto the same job, which is the entire point of the game. County pride survives in the bonus, the report card and the leaderboard grouping. County walls did not.</p>
+
+    <h2>Slow reveal</h2>
+    <p>Ranks run from Flagger up to Highway Director, and they gate the interface itself. Overtime does not render until Foreman. The equipment garage does not render until County Supervisor. A new player sees the map, the queue and the leaderboard, and that is all.</p>
+    <p>Complexity is what you get for staying rather than what you pay to start.</p>
+
+    <h2>Storm mode</h2>
+    <p>When the NWS has counties under a warning, incidents concentrate there, take their character from the weather, and pay double. Winter warnings spawn plow work in priority order: interstates first, then US routes, then state routes.</p>
+    <p>This is my favourite part of the project, because the game gets more interesting on days I have nothing to do with.</p>
+
+    <h2>What I would tell someone building this</h2>
+    <ul>
+      <li>Serverless is a design constraint before it is an architecture. Deciding it up front changed which mechanics were even proposed.</li>
+      <li>Check the real distribution of your real data before you build a rule on top of it. Counties with one work order do not show up in a design document.</li>
+      <li>Seeding generation from the date gives you a shared daily world and idempotent jobs for free.</li>
+    </ul>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+</footer>
+
+</body>
+</html>

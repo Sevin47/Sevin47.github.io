@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plot Twist: World Deed build notes</title>
+<meta name="description" content="How Plot Twist: World Deed was built: 300 metre tiles on a real Earth, districts derived from OpenStreetMap, and a daily energy cap that stops money from winning.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap narrow">
+  <a class="backlink" href="../index.html">&larr; all projects</a>
+
+  <article>
+    <h1>Plot Twist: World Deed</h1>
+    <p class="sub">A land grab idle game on one shared Earth.</p>
+
+    <div class="meta">
+      <a class="btn btn-primary" href="https://sevin47.github.io/Plot-Twist-World/">Play it</a>
+      <a class="btn" href="https://github.com/Sevin47/Plot-Twist-World">Source</a>
+      <span class="tag">Supabase</span>
+      <span class="tag">Live players</span>
+    </div>
+
+    <h2>The idea</h2>
+    <p>One shared Earth, cut into roughly 300 metre tiles on a real map. You drop a pin anywhere in the world, your street or somebody else's, claim the tile under it, and build out from there. Everyone plays on the same planet, so the map slowly fills up with other people's holdings.</p>
+    <p>You can hit play as a guest with no account at all, or sign in if you want your world to follow you between devices.</p>
+
+    <div class="callout">
+      <span class="label">Since the pitch invites the question</span>
+      <p>There is no crypto, no NFTs, no real money and nothing for sale. The currency is a score with no real world value and no way to buy it. The land is map tiles in a database.</p>
+    </div>
+
+    <h2>The loop</h2>
+    <ul>
+      <li><strong>Claim</strong> unowned land. Every tile rolls a deed rarity, and its district (downtown, waterfront, urban, coast, suburbs, rural) comes from real OpenStreetMap data, so where you claim genuinely matters.</li>
+      <li><strong>Build</strong> it up through cottage, duplex, apartments, tower. Buildings accrue rent while you are gone.</li>
+      <li><strong>Trade</strong> on an open player market, or flip tiles you would rather not hold.</li>
+      <li><strong>Raid</strong> other players to capture their tiles, and defend your own.</li>
+      <li><strong>Collections, landmarks and contracts</strong> give you longer things to chase than a rising number.</li>
+    </ul>
+
+    <h2>The constraint that makes it a game</h2>
+    <p>Claiming land costs energy, and you get a fixed amount per day, somewhere between 10 and 24 depending on your status rank.</p>
+    <p>That one rule does most of the design work. Money alone cannot sprawl you across the map, so a player who checks in every day out-claims a much richer player who does not. Rent is idle. Land is not.</p>
+
+    <h2>Covenants</h2>
+    <p>When a build finishes you draft one of three permanent traits for that tile. Every card is a real tradeoff, something like +100% defense against &minus;30% rent, and there is never a free upgrade in the deck.</p>
+    <p>Declining is permanent too, for as long as you hold the tile. That was the part I went back and forth on. Letting players re-roll made the whole system decorative, because everyone converged on the same handful of cards and every tile ended up looking the same.</p>
+
+    <h2>Running it without a game server</h2>
+    <p>The backend is Supabase, and the browser talks to Postgres directly. There is no resident game process to keep alive, which is the only reason a project like this costs nothing to run.</p>
+    <p>The grid itself is a quadkey grid over Web Mercator at zoom 17, which is where the 306 metre cell size comes from. <a href="ember-line.html">Ember Line</a> is built on the same <code>src/grid.js</code>, including the deterministic per-cell hash. That hash is the quietly useful part: the same tile produces the same content for every player, forever, with nothing stored anywhere.</p>
+
+    <h2>Having actual players</h2>
+    <p>This is the first thing I built that strangers played, and it changed how I work on it. Most of the sessions in the repo history are not features. They are a player reporting that their unlocked regions were not showing up, or that the daily stipend double-claimed when they switched devices, or that the tutorial completion flag was not sticking.</p>
+    <p>The bugs that actually reach people are almost never the ones you were worried about.</p>
+
+    <h2>What I would tell someone building this</h2>
+    <ul>
+      <li>One scarce resource on a daily timer does more for pacing than any amount of cost curve tuning.</li>
+      <li>If a permanent choice can be undone, players will treat it as a menu and pick the best option every time.</li>
+      <li>Deterministic generation from a stable cell id means the whole planet can hold content without a database row for any of it.</li>
+    </ul>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+</footer>
+
+</body>
+</html>

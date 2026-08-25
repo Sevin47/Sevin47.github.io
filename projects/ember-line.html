@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Line: build notes</title>
+<meta name="description" content="How Ember Line was built: reading fuel out of basemap pixels, throwing away the probability spread model, and a tuning sweep that returned six identical results.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap narrow">
+  <a class="backlink" href="../index.html">&larr; all projects</a>
+
+  <article>
+    <h1>Ember Line</h1>
+    <p class="sub">Wildfire containment on the real world, cell by cell.</p>
+
+    <div class="meta">
+      <a class="btn btn-primary" href="https://sevin47.github.io/ember-line/">Play it</a>
+      <a class="btn" href="https://github.com/Sevin47/ember-line">Source</a>
+      <span class="tag">Vite</span>
+      <span class="tag">No backend</span>
+    </div>
+
+    <h2>The idea</h2>
+    <p>A fire starts at real coordinates in real terrain. You dispatch engines, hand crews, dozers, helicopters and air tankers to cut line, drop water and defend structures for one 90 minute operational period, while the wind shifts underneath you.</p>
+    <p>You are graded on structures lost against the briefed par, how much of the perimeter you held, and what it cost. Acreage is not the score.</p>
+
+    <h2>The fuel model is the actual map</h2>
+    <p>The obvious approach is to generate terrain from noise. The problem with that is you can see the basemap, so you watch a fire walk across a lake that is right there on screen.</p>
+    <p>Instead the game classifies fuel by <strong>reading the basemap's pixels</strong>. CARTO's Voyager style paints water, vegetation, buildings and roads in tightly separated colours, so drawing a tile to an offscreen canvas and counting pixel classes over a cell's 64&times;64 block gives a genuine land cover read. The lake in the imagery is the lake the fire stops at. The subdivision you can see is where the structures are.</p>
+
+    <div class="table-scroll">
+    <table>
+      <tr><th>Tested against</th><th>Classifies as</th></tr>
+      <tr><td>Lake Tahoe</td><td>100% water</td></tr>
+      <tr><td>Table Mountain</td><td>95% timber</td></tr>
+      <tr><td>Central Denver</td><td>mostly urban</td></tr>
+    </table>
+    </div>
+
+    <p>Two calibration notes are baked into the code. Building footprints are not painted until zoom 16, so road density is the usable development signal at the classification zoom. And unmapped wildland renders as plain background, so undeveloped background splits deterministically into grass and brush patches. That split is the only invented terrain in the game.</p>
+    <p>Classification zoom is fixed and has nothing to do with camera zoom, so a patch of ground always classifies the same way regardless of how far in you happened to be when the fire reached it.</p>
+
+    <h2>Throwing away the probability model</h2>
+    <p>The first spread model was the obvious one: roll a probability each second for each burning cell to catch its neighbours. It does not work on a fixed grid, and it fails in a specific way that is worth knowing about.</p>
+
+    <div class="callout">
+      <span class="label">Percolation</span>
+      <p>A probabilistic automaton on a grid has a threshold. Below it every fire dies, above it every fire runs away, and the transition between those two is almost a step. On one incident, a rate multiplier of 0.33 died at 24 cells while 0.5 burned 1,038 cells and was still going. Rate of spread and whether it spread at all were the same knob.</p>
+    </div>
+
+    <p>The replacement is a preheat dose model. Every burning cell pushes dose into its unburnt neighbours each second, scaled by wind alignment, dryness, fuel moisture, retardant and partial line, and a cell ignites when dose crosses its own threshold.</p>
+    <p>That separates the two things. Spread is certain, and its <em>speed</em> is what the rate says, so fuel rates could be derived from real target rates of spread (grass around 4.5 km/h, brush around 2, timber around 1.2) and actually hit them. The randomness moved into a per-cell ignition threshold, where it roughens the perimeter without deciding whether a fire lives or dies.</p>
+    <p>Two consequences fell out of that. Fuel load ends up constrained by rate rather than chosen freely, because a cell only spreads during its flaming window, and if that window is shorter than the time it takes to ignite the next cell the fire is below threshold no matter what else you change. And wind dominates on purpose: head fire alignment is cubed, so a fire under 25 mph reads as a directional run instead of a lopsided blob. Getting ahead of the head is the correct instinct, and hosing flames is the wrong one.</p>
+
+    <h2>The sweep that returned six identical results</h2>
+    <p>While tuning spread I ran a sweep across a 6&times; range of rate multipliers from the browser console. Every single run came back identical.</p>
+    <p>A dev server can hand a console-issued <code>import()</code> a second copy of a module. I was setting the rate on one copy of the object and the simulation was reading a different one. Nothing errored, nothing warned, the numbers just refused to move. <code>fire.js</code> now exports <code>_peekRate</code> and <code>_setRateMult</code>, which the game itself never calls. They exist purely so tuning from outside touches the object the simulation actually reads.</p>
+
+    <h2>Shared with Plot Twist World</h2>
+    <p>The grid is the same one <a href="plot-twist-world.html">Plot Twist World</a> uses: a quadkey grid over Web Mercator at zoom 17, so a cell is about 306 metres on a side at the equator and raster basemap tiles line up on it with no reprojection. <code>src/grid.js</code> is shared between them, including the Mercator maths that accounts for cells shrinking toward the poles.</p>
+    <p>In one game a cell is a deed you paid for. In the other it is a patch of fuel with a moisture content and a structure count, and the thing crossing it does not care what you paid.</p>
+
+    <h2>What I would tell someone building this</h2>
+    <ul>
+      <li>If the player can see the source data, derive from it. Anything you invent on top has to survive being compared to what is on screen.</li>
+      <li>When one knob controls two things, the model is wrong. Splitting certainty from speed fixed everything downstream at once.</li>
+      <li>If a parameter sweep returns suspiciously clean results, check you are writing to the object being read.</li>
+    </ul>
+
+    <p style="color:var(--faint);font-size:.88rem;margin-top:36px">Basemap &copy; <a href="https://carto.com/attributions">CARTO</a>, data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. Incidents are fictional, set on real terrain. They are not reconstructions of any historical fire, and this is not a training tool.</p>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+</footer>
+
+</body>
+</html>

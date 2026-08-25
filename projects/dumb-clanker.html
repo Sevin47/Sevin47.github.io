@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dumb Clanker: build notes</title>
+<meta name="description" content="How Dumb Clanker was built: identical bots, one standing plan plus interrupts, typed number slots, and a starter script that loses on purpose.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap narrow">
+  <a class="backlink" href="../index.html">&larr; all projects</a>
+
+  <article>
+    <h1>Dumb Clanker</h1>
+    <p class="sub">Write a program, set your bot loose in the arena, watch it lose in ways you did not anticipate.</p>
+
+    <div class="meta">
+      <a class="btn btn-primary" href="https://sevin47.github.io/dumb-clanker/">Play it</a>
+      <a class="btn" href="https://github.com/Sevin47/dumb-clanker">Source</a>
+      <span class="tag">Vite</span>
+      <span class="tag">TypeScript</span>
+    </div>
+
+    <h2>The idea</h2>
+    <p>Every bot in the game is mechanically identical. There is nothing to build, nothing to buy, no upgrade tree. The only thing that makes your bot better than someone else's is the program you wrote for it.</p>
+    <p>I wanted the whole game to be the one skill. Any stat you could spend on would give players somewhere else to look when they lost.</p>
+
+    <h2>The chassis</h2>
+    <p>One standard body with three things that turn independently. The hull drives and steers. The turret aims wherever you point it regardless of what the hull is doing. The radar is a narrow 12&deg; beam reaching 38 metres, and it only reports a bot when the beam actually sweeps across one, so a script has to keep it moving or deliberately hold it on somebody.</p>
+    <p>The arena is a 54 metre square, about 27 bot-widths across, shown in full at all times. Every bot's radar beam is drawn on the floor in its own colour, so you can see where everyone is looking, not just where you are looking. That turned out to be the single best debugging feature in the game and I added it for looks.</p>
+    <p>Health is one pool. Firing generates gun heat and you cannot fire again until it cools. Heavier shots hurt more, fly slower and lock the gun longer. A power-3 round crawls at 10 m/s against bots that move at 8, so heavy shots genuinely miss anything that is awake.</p>
+
+    <h2>Clank Script</h2>
+    <p>Scratch-shaped blocks dragged into stacks, each headed by a "when" hat.</p>
+    <ul>
+      <li><code>when the match starts</code> is your standing plan. It usually wants a <code>forever</code> in it.</li>
+      <li>Every other hat is an interrupt. It takes over, runs to the end, then the standing plan carries on from where it was.</li>
+      <li>No block both senses and acts. Nothing aims for you.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="label">One plan plus interrupts</span>
+      <p>This structure exists so two stacks can never fight over the controls. In an earlier version any hat could hold the wheel indefinitely, and players wrote perfectly reasonable scripts where two stacks each drove the hull a different direction every tick. The bot vibrated in place. Nothing in the script looked wrong, because nothing was wrong in isolation.</p>
+    </div>
+
+    <h2>Typed number slots</h2>
+    <p>Every number slot has a unit, and only sensors measuring that unit can drive it. <code>fire with power</code> takes a plain number, <code>drive for</code> offers only times, <code>turn</code> offers only angles. Something like "drive forward for [bots still alive] seconds" is never offered in the first place.</p>
+    <p>Any number slot can be driven by a sensor instead of a fixed value, which is how you build aiming out of parts:</p>
+    <div class="table-scroll">
+    <table>
+      <tr><td><code>turn radar right [radar: how far off target]</code></td><td>keeps the beam on them</td></tr>
+      <tr><td><code>turn turret right [turret: how far off target]</code></td><td>swings the gun on</td></tr>
+      <tr><td><code>if [turret: how far off target] is less than [5]</code></td><td>then fire</td></tr>
+    </table>
+    </div>
+    <p>The three "how far off target" readings are signed underneath, where negative means left, so a turn block steers itself the right way without the player thinking about it. A comparison on the same reading ignores the sign and just answers "how far off am I".</p>
+    <p>There used to be a signed and an unsigned copy of each of those three. Choosing between two readings of the same number was the thing new players got wrong most often, so I deleted half of them and made the remaining one behave correctly in both places.</p>
+
+    <h2>A starter script that loses</h2>
+    <p>The script you begin with wins about 2 matches in 10 against the roster. That is on purpose. It demonstrates the one pattern worth copying, which is sweep the radar, and when the beam finds somebody swing the gun onto them and shoot. Everything else it does badly, so there is something left for you to work out.</p>
+    <p>Rival scripts are not copyable. If you could read the bot that just beat you, the game would be over in an afternoon.</p>
+
+    <h2>What I would tell someone building this</h2>
+    <ul>
+      <li>Making the machine visible beats explaining it. Drawing every radar beam on the floor taught players more about the game than any tooltip.</li>
+      <li>If two valid choices differ in a way the player cannot see, remove one of them.</li>
+      <li>A tutorial that wins is not a tutorial. Give people something that works badly enough to be worth fixing.</li>
+    </ul>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">GitHub</a></div>
+</footer>
+
+</body>
+</html>
