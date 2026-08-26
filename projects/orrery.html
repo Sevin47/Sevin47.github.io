@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Orrery: build notes</title>
-<meta name="description" content="Notes on building Orrery: a real task tracker drawn as a galaxy, where finished work is the thing that accumulates on screen.">
+<meta name="description" content="How Orrery works: projects as planets, finished tasks as fragments, open work orbiting as stardust until you crystallize it.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <div class="wrap">
-  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
+  <a class="back" href="../index.html">&larr; All projects</a>
 
   <article class="notes">
     <h1>Orrery</h1>
@@ -30,17 +30,21 @@
       <figcaption>Eight worlds, sized by how much of each one is finished. Demo data, not my real board.</figcaption>
     </figure>
 
-    <h2>It tracks real work</h2>
-    <p>That is the rule that kept it honest. A parody of a dashboard would have been quicker to build, and I would have stopped opening it inside a week.</p>
+    <h2>Two views</h2>
+    <p>The galaxy view lays planets out on a golden-angle spiral, turning slowly against a starfield of a couple of thousand stars with nebula sprites and a little camera drift. Hovering names a world, and a collapsible index lists them all with their done and total counts.</p>
+    <p>Selecting one glides the camera in and splits the planet apart into its fragments. Each fragment is one completed task, and clicking it opens what that task was. Leaving the view puts the planet back together.</p>
 
-    <h2>Decided before any code</h2>
-    <p>Serene and cosmic. Deep blues, nebulas, ambient sound, no neon and nothing cartoonish. Navigation is click and zoom with the camera gliding, with no ship and no free flight, because free flight turns a calm space into a chore. Finishing a project gets a bloom of light and a soft chime rather than a fireworks show.</p>
+    <h2>Stardust and crystallizing</h2>
+    <p>Each open task orbits as its own particle cluster at its own radius, speed and inclination. Clicking one opens the detail panel with a crystallize action. Take it and the dust spirals inward, the planet rebuilds with the new fragment in place, a bloom of light expands and a chime plays. Finishing the last task on a world gets a bigger bloom and a soft three-note chord.</p>
+    <p>Tasks carry a title, notes, a due date and a status, and can be sent back to stardust if you were premature about it.</p>
 
     <h2>Planets generate themselves</h2>
-    <p>Appearance is deterministic from the project id, so a project always looks like itself, with hue in a teal to violet range, latitude banding, polar caps and scattered bright faces that read as cities.</p>
+    <p>Appearance is deterministic from the project id, so a project always looks like itself, with hue in a teal to violet range, latitude banding, polar caps and scattered bright faces that read as cities of light.</p>
+    <p>The parts that move are the parts that should. Radius grows with completed tasks, an atmosphere glow builds, rings appear at eight crystallized tasks, and a brand new project with nothing done yet renders as a small pulsing molten core.</p>
 
-    <h2>What is missing</h2>
-    <p>Being honest about a personal tool: there is no task editing after creation, only complete, uncomplete and delete. Overdue shows as amber text in a panel and does nothing in the scene. Planet positions shift when you delete a project, because the layout is index based rather than tied to ids. And it is still one file of about eleven hundred lines that wants breaking up.</p>
+    <h2>Calm by default</h2>
+    <p>Serene and cosmic was decided before any code: deep blues, nebulas, ambient sound, no neon and nothing cartoonish. Navigation is click and zoom with the camera gliding, with no ship and no free flight, because free flight turns a calm space into a chore.</p>
+    <p>Generative ambient audio is available and off until you ask for it. Reduced motion slows the rotation, drops the parallax and skips the dust spiral. Everything saves locally and stays until you delete it.</p>
   </article>
 </div>
 

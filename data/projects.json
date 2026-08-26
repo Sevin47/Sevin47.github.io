@@ -1,0 +1,71 @@
+{
+  "owner": "Sevin47",
+  "projects": [
+    {
+      "repo": "orebound",
+      "title": "Orebound",
+      "page": "projects/orebound.html",
+      "live": "https://sevin47.github.io/orebound/",
+      "shot": "shots/orebound.png",
+      "cta": "Play",
+      "kind": "Game · one HTML file · no dependencies",
+      "blurb": "Dig through a vast pixel world looking for the one golden pixel. Shoot balls into rock, they bounce, and every pixel you break pays for the next shot.",
+      "alt": "Orebound: a cavern dug out of dark rock, with orange balls scattered through it and a ball-type dock along the bottom."
+    },
+    {
+      "repo": "dumb-clanker",
+      "title": "Dumb Clanker",
+      "page": "projects/dumb-clanker.html",
+      "live": "https://sevin47.github.io/dumb-clanker/",
+      "shot": "shots/dumb-clanker.png",
+      "cta": "Play",
+      "kind": "Game · visual scripting · Vite",
+      "blurb": "A programming game. Every bot in the arena is mechanically identical, so the only thing that makes yours better is the program you wrote for it.",
+      "alt": "The Dumb Clanker workshop: a block palette on the left and a Clank Script program built from colored blocks in the center."
+    },
+    {
+      "repo": "Plot-Twist-World",
+      "title": "Plot Twist: World Deed",
+      "page": "projects/plot-twist-world.html",
+      "live": "https://sevin47.github.io/Plot-Twist-World/",
+      "shot": "shots/plot-twist.png",
+      "cta": "Play",
+      "kind": "Game · multiplayer · Supabase",
+      "blurb": "A land grab on one shared Earth. Claim 300 meter tiles anywhere on the planet, build on them, and hold them against everyone else playing.",
+      "alt": "The Plot Twist: World Deed title screen over a dark world map."
+    },
+    {
+      "repo": "ember-line",
+      "title": "Ember Line",
+      "page": "projects/ember-line.html",
+      "live": "https://sevin47.github.io/ember-line/",
+      "shot": "shots/ember-line.png",
+      "cta": "Play",
+      "kind": "Game · simulation · real land cover",
+      "blurb": "Wildfire containment on real terrain. Cut line, drop water and defend structures for one 90 minute operational period while the wind shifts underneath you.",
+      "alt": "Ember Line: a fire burning on a real basemap, with a cell inspector panel showing fuel type and dispatch options."
+    },
+    {
+      "repo": "roadworks",
+      "title": "Roadworks",
+      "page": "projects/roadworks.html",
+      "live": "https://sevin47.github.io/roadworks/",
+      "shot": "shots/roadworks.png",
+      "cta": "Play",
+      "kind": "Game · co-op · real GIS data",
+      "blurb": "A shared, real-time game about keeping the roads open. A new work board appears every morning and the whole office dispatches crews to the same one.",
+      "alt": "The Roadworks dispatch board: a map of West Virginia covered in colored work orders, with a queue panel on the right."
+    },
+    {
+      "repo": "orrery",
+      "title": "Orrery",
+      "page": "projects/orrery.html",
+      "live": "https://sevin47.github.io/orrery/",
+      "shot": "shots/orrery.png",
+      "cta": "Open",
+      "kind": "Tool · Three.js · local first",
+      "blurb": "A project tracker drawn as a personal galaxy. Every project is a planet, every finished task is a piece of it, and everything still open orbits as dust.",
+      "alt": "Orrery: named planets of different sizes arranged around a central light in a dark starfield."
+    }
+  ]
+}

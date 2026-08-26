@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dumb Clanker: build notes</title>
-<meta name="description" content="Notes on building Dumb Clanker: identical bots, one standing plan plus interrupts, and a starter script that loses on purpose.">
+<meta name="description" content="How Dumb Clanker works: one standard chassis, a block language called Clank Script, and a bot that only wins if your program is better.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <div class="wrap">
-  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
+  <a class="back" href="../index.html">&larr; All projects</a>
 
   <article class="notes">
     <h1>Dumb Clanker</h1>
-    <p class="standfirst">Write a program, set your bot loose, watch it lose in ways you did not expect.</p>
+    <p class="standfirst">Write a program, set your bot loose in the arena, and watch what your instructions actually do.</p>
 
     <div class="toolbar">
       <a class="play" href="https://sevin47.github.io/dumb-clanker/">Play it</a>
@@ -27,21 +27,34 @@
 
     <figure>
       <img src="../shots/dumb-clanker.png" alt="The Dumb Clanker workshop, with a block palette on the left and a program of stacked event blocks in the center." width="1280" height="720">
-      <figcaption>The starter script. Eleven blocks, and it loses most of its matches.</figcaption>
+      <figcaption>The workshop. Blocks on the left, your program in the middle, the battle on the right.</figcaption>
     </figure>
 
     <h2>The chassis</h2>
-    <p>One body with three things that turn independently. The hull drives, the turret aims wherever you point it, and the radar is a narrow 12 degree beam reaching 38 meters. The radar only reports a bot when the beam sweeps across one, so a script has to keep it moving or hold it on somebody deliberately.</p>
+    <p>One standard body with three things that turn independently. The hull drives and steers. The turret aims wherever you point it, whatever the hull is doing. The radar is a narrow 12 degree beam reaching 38 meters, and it only reports a bot when the beam actually sweeps across one, so a script has to keep it moving or hold it on somebody deliberately.</p>
+    <p>The arena is a 54 meter square, about 27 bot-widths across, shown in full at all times with start positions randomized every battle. Every bot's radar beam is drawn on the floor in its own color, so you can see where everyone is looking rather than just where you are looking.</p>
+    <p>Health is a single pool. Firing generates gun heat and you cannot fire again until it cools. Heavier shots hurt more, fly slower and lock the gun for longer, so a power-3 round crawls at 10 m/s against bots that move at 8 and genuinely misses anything that is awake.</p>
 
-    <h2>One plan, plus interrupts</h2>
-    <p><code>when the battle starts</code> is your standing plan. Every other hat block is an interrupt: it takes over, runs to the end, then hands control back where it left off.</p>
-    <p>That structure exists because of a specific failure. In an earlier version any stack could hold the wheel indefinitely, and people wrote perfectly sensible scripts where two of them drove the hull opposite directions every tick. The bot sat there vibrating. Nothing in the script looked wrong, because nothing was wrong on its own.</p>
+    <h2>Clank Script</h2>
+    <p>Scratch-shaped blocks dragged into stacks, each headed by a "when" hat. <code>when the battle starts</code> is your standing plan and usually wants a <code>forever</code> in it. Every other hat is an interrupt: it takes over, runs to the end, then hands control back where it left off, so two stacks can never fight over the controls.</p>
+    <p>No block both senses and acts, and nothing aims for you. Conditions are a fixed sensor, comparison and value triple, like <code>if [distance to the target] [is less than] [10]</code>.</p>
 
-    <h2>Typed slots</h2>
-    <p>Every number slot carries a unit, and only sensors measuring that unit can fill it. <code>drive for</code> offers times, <code>turn</code> offers angles, and something like "drive forward for [bots still alive] seconds" is never offered in the first place.</p>
+    <h2>Sensors in any slot</h2>
+    <p>Every number slot carries a unit, and only sensors measuring that unit can drive it. <code>drive for</code> offers times, <code>turn</code> offers angles, and nonsense like "drive forward for [bots still alive] seconds" is never offered in the first place.</p>
+    <p>Any slot can take a live sensor reading instead of a fixed number, which is how you build aiming out of parts:</p>
+
+    <div class="scroll">
+    <table class="data">
+      <tr><td>turn radar right [radar: how far off target]</td><td>keeps the beam on them</td></tr>
+      <tr><td>turn turret right [turret: how far off target]</td><td>swings the gun on</td></tr>
+      <tr><td>if [turret: how far off target] is less than [5]</td><td>then fire</td></tr>
+    </table>
+    </div>
+
+    <p>Each turn corrects once, so a moving target needs re-aiming every lap. Blocks are grouped by what they command: Moving for the hull, then Turret, Radar, Events and Control, with a simple and an advanced palette.</p>
 
     <h2>A starter script that loses</h2>
-    <p>The script you begin with wins about two matches in ten. It shows the one pattern worth copying, which is sweep the radar and swing the gun onto whatever it finds, and it does everything else badly so there is something left to work out. Rival scripts are not readable. If you could open the bot that just beat you, the game would be over in an afternoon.</p>
+    <p>The script you begin with wins about two matches in ten. It shows the one pattern worth copying, which is sweep the radar and swing the gun onto whatever it finds, and it does everything else plainly so there is something left to work out. Rival scripts are not readable. If you could open the bot that just beat you, the game would be over in an afternoon.</p>
   </article>
 </div>
 

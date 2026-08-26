@@ -1,0 +1,14 @@
+{
+  "name": "sevin47-hub",
+  "private": true,
+  "type": "module",
+  "description": "Static hub for Sevin Eldridge's games and projects",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "shots": "node scripts/shots.mjs",
+    "serve": "python -m http.server 8099"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

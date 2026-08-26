@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ember Line: build notes</title>
-<meta name="description" content="Notes on building Ember Line: reading fuel out of basemap pixels, and throwing away a fire model that only had one setting.">
+<meta name="description" content="How Ember Line works: fuel read from real basemap pixels, a preheat spread model, and one 90 minute operational period to hold the line.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <div class="wrap">
-  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
+  <a class="back" href="../index.html">&larr; All projects</a>
 
   <article class="notes">
     <h1>Ember Line</h1>
@@ -23,24 +23,31 @@
     </div>
 
     <p class="lead">A fire starts at real coordinates in real terrain. You send engines, hand crews, dozers, helicopters and air tankers to cut line, drop water and defend structures for one 90 minute operational period, while the wind shifts underneath you.</p>
-    <p>You are graded on structures lost against the briefed par, how much perimeter you held, and what it cost. Acreage is not the score.</p>
+    <p>No API keys, no backend, no account. Career progress lives in the browser.</p>
 
     <figure>
       <img src="../shots/ember-line.png" alt="A fire burning on a real basemap, with a panel showing the selected cell as burning brush at 85 percent intensity and four dispatch options." width="1280" height="720">
-      <figcaption>Ten minutes into the Ridge Complex. Eighty-three acres, one structure lost, every unit still idle.</figcaption>
+      <figcaption>Ten minutes into the Ridge Complex, with the cell inspector open on a patch of burning chaparral.</figcaption>
     </figure>
 
     <h2>The map is the fuel model</h2>
-    <p>The obvious approach is to generate terrain from noise, and the problem with that is you can see the basemap. You end up watching a fire walk across a lake that is right there on screen.</p>
-    <p>So the game classifies fuel by reading the basemap's pixels. CARTO's Voyager style paints water, vegetation, buildings and roads in tightly separated colors, so drawing a tile to an offscreen canvas and counting pixel classes over a cell's block gives a real land cover read. Lake Tahoe comes back 100% water, Table Mountain 95% timber, central Denver mostly urban. The lake you can see is the lake the fire stops at.</p>
+    <p>Rather than generate terrain from noise, the game classifies fuel by reading the basemap's pixels. CARTO's Voyager style paints water, vegetation, buildings and roads in tightly separated colors, so drawing a tile to an offscreen canvas and counting pixel classes over a cell gives a real land cover read. Lake Tahoe comes back 100% water, Table Mountain 95% timber, central Denver mostly urban.</p>
+    <p>The lake you can see is the lake the fire stops at, and the subdivision you can see is where the structures are. Classification zoom is fixed and independent of the camera, so a patch of ground always classifies the same way however far in you were when the fire reached it.</p>
 
-    <h2>A model with one knob</h2>
-    <p>The first spread model rolled a probability each second for each burning cell to catch its neighbors. On a fixed grid that has a percolation threshold, and the transition across it is nearly a step. On one incident a rate multiplier of 0.33 died at 24 cells while 0.5 burned 1,038 and was still going. How fast it spread and whether it spread at all were the same setting.</p>
-    <p>The replacement pushes preheat dose into neighboring cells each second, scaled by wind alignment, dryness, moisture, retardant and partial line, and a cell ignites when dose crosses its own threshold. Spread became certain and its speed became what the rate says, so fuel rates could be derived from real published rates of spread and actually hit them. The randomness moved into per-cell ignition thresholds, where it roughens the perimeter without deciding whether a fire lives.</p>
+    <h2>How the fire spreads</h2>
+    <p>Every burning cell pushes preheat dose into its unburnt neighbors each second, scaled by wind alignment, dryness, fuel moisture, retardant and any line already cut. A cell ignites when dose crosses its own threshold.</p>
+    <p>Because spread is certain and the rate controls only its speed, fuel rates are derived from real published rates of spread and hit them: grass around 4.5 km/h, brush around 2, timber around 1.2. Wind dominates on purpose. Head fire alignment is cubed, so a fire under 25 mph reads as a directional run rather than a lopsided blob, and getting ahead of the head becomes the right instinct.</p>
 
-    <h2>Six identical results</h2>
-    <p>While tuning I swept the rate multiplier across a 6x range from the browser console, and every run came back the same.</p>
-    <p>A dev server can hand a console-issued <code>import()</code> a second copy of a module, so I was setting the rate on one object while the simulation read another. Nothing errored. The numbers just refused to move. There are now two exports the game itself never calls, which exist so tuning from outside touches the object being read.</p>
+    <h2>Playing it</h2>
+    <p>Tap a unit, then tap the map to dispatch it. The task is inferred from where you tapped, with line on unburnt ground, direct attack on flame and protection where structures are. The chips above the roster force a specific task, and <code>queue</code> stacks assignments.</p>
+    <ul>
+      <li>Cut line ahead of the head and anchor it into something that will not burn, like water, rock or already-black ground. Line cut where the fire was never going is worth nothing, and the containment readout will tell you so.</li>
+      <li>Engines are the only thing that defends structures, covering their cell and the four touching it.</li>
+      <li>Air tankers act on ground that is not burning yet. They are the only resource that can, and they cost more per hour than everything else combined.</li>
+      <li>Keys: <code>space</code> pause, <code>1</code> to <code>4</code> speed, <code>f</code> fuel layer, <code>esc</code> clear selection.</li>
+    </ul>
+
+    <p>You are graded on structures lost against the briefed par, how much of the perimeter you held, and what it cost. Acreage is not the score.</p>
 
     <p class="wide" style="color:var(--muted);font-size:.9rem;margin-top:2.5rem">Basemap and data credits: <a href="https://carto.com/attributions">CARTO</a> and <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. Incidents are fictional, set on real terrain. They are not reconstructions of any historical fire, and this is not a training tool.</p>
   </article>

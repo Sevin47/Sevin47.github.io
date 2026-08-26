@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plot Twist: World Deed build notes</title>
-<meta name="description" content="Notes on building Plot Twist: World Deed: 300 meter tiles on a real Earth, and a daily energy cap that stops money from winning.">
+<meta name="description" content="How Plot Twist: World Deed works: 300 meter tiles on a real Earth, districts from OpenStreetMap, covenants, raids and a daily energy cap.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <div class="wrap">
-  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
+  <a class="back" href="../index.html">&larr; All projects</a>
 
   <article class="notes">
     <h1>Plot Twist: World Deed</h1>
-    <p class="standfirst">A land grab on one shared Earth.</p>
+    <p class="standfirst">A land grab idle game on one shared Earth.</p>
 
     <div class="toolbar">
       <a class="play" href="https://sevin47.github.io/Plot-Twist-World/">Play it</a>
@@ -30,17 +30,24 @@
       <figcaption>8.59 billion tiles, and most of them are still unclaimed.</figcaption>
     </figure>
 
+    <h2>The loop</h2>
+    <ul>
+      <li><strong>Claim</strong> unowned land. Every tile rolls a deed rarity, and its district, whether downtown, waterfront, urban, coast, suburbs or rural, comes from real OpenStreetMap data, so where you claim genuinely matters.</li>
+      <li><strong>Build</strong> it up through cottage, duplex, apartments and tower. Buildings accrue rent while you are away.</li>
+      <li><strong>Trade</strong> on an open player market, or flip tiles you would rather not hold.</li>
+      <li><strong>Raid</strong> other players to capture their tiles, and defend your own.</li>
+      <li><strong>Collect.</strong> Collections, landmarks and contracts give you longer things to chase than a rising number.</li>
+    </ul>
+
     <h2>The rule that makes it a game</h2>
-    <p>Claiming land costs energy, and you get a fixed amount per day depending on your rank. That single constraint does most of the design work: money alone cannot sprawl you across the map, so somebody who checks in daily out-claims a much richer player who does not. Rent is idle. Land is not.</p>
+    <p>Claiming land costs energy, and you get a fixed amount per day, between 10 and 24 depending on your status rank. That single constraint does most of the design work: money alone cannot sprawl you across the map, so somebody who checks in daily out-claims a much richer player who does not. Rent is idle. Land is not.</p>
 
     <h2>Covenants</h2>
-    <p>When a build finishes you draft one of three permanent traits for that tile. Every card is a real tradeoff, something like double defense against a third less rent, and there is no free upgrade anywhere in the deck. Declining is permanent too, for as long as you hold the tile.</p>
+    <p>When a build finishes you draft one of three permanent traits for that tile. Every card is a real tradeoff, something like double defense against a third less rent, and there is no free upgrade anywhere in the deck. Declining is permanent too, for as long as you hold the tile, which keeps the choice weighty and keeps tiles from all converging on the same build.</p>
 
     <h2>Running it for nothing</h2>
     <p>The backend is Supabase and the browser talks to Postgres directly, so there is no game process to keep alive. That is the only reason something like this costs nothing to host.</p>
-
-    <h2>Having actual players</h2>
-    <p>This is the first thing I built that strangers played, and it changed how I work on it. Most of the history is not features. It is somebody reporting that their unlocked regions were not showing up, or that the daily stipend double-claimed when they switched devices, or that the tutorial flag was not sticking. The bugs that reach people are almost never the ones I was worried about.</p>
+    <p>The grid is a quadkey grid over Web Mercator at zoom 17, which is where the tile size comes from. <a href="ember-line.html">Ember Line</a> is built on the same grid code, including the per-cell hash that lets the same tile generate the same content for every player forever without storing a single row.</p>
   </article>
 </div>
 

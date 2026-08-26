@@ -1,0 +1,52 @@
+name: Sync project info
+
+# Refreshes the "Updated ..." stamps and the live/offline check on the hub.
+# Runs itself daily, and can be triggered by hand or by any project repo that
+# sends a repository_dispatch event (see README).
+
+on:
+  schedule:
+    - cron: '17 6 * * *'      # 06:17 UTC daily
+  workflow_dispatch:
+  repository_dispatch:
+    types: [project-updated]
+  push:
+    branches: [main]
+    paths:
+      - 'data/projects.json'
+      - 'scripts/build.mjs'
+      - '.github/workflows/sync.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rebuild project rows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/build.mjs
+
+      - name: Commit if anything changed
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Sync project info [skip ci]"
+          git push

@@ -133,8 +133,17 @@ a:focus-visible, button:focus-visible {
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--muted);
+  margin: 0 0 .35rem;
+}
+
+.stamp {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .06em;
+  color: var(--muted);
   margin: 0 0 var(--s3);
 }
+.stamp.offline { color: var(--accent); }
 
 .links { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; }
 
@@ -213,6 +222,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .notes p { max-width: var(--measure); margin: 0 0 var(--s2); }
+.notes ul { max-width: var(--measure); margin: 0 0 var(--s2); padding-left: 1.1rem; }
+.notes li { margin-bottom: .5rem; }
+.notes li::marker { color: var(--accent); }
+
 .notes p.wide { max-width: 46rem; }
 
 .lead { font-size: 1.08rem; }

@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadworks: build notes</title>
-<meta name="description" content="Notes on building Roadworks: real road centerlines, a co-op multiplier that rewards crowding, and a multiplayer game with no game server.">
+<meta name="description" content="How Roadworks works: real road centerlines, a daily shared work board, a co-op multiplier that rewards crowding, and live weather driving storm mode.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <div class="wrap">
-  <a class="back" href="../index.html">&larr; Sevin Eldridge</a>
+  <a class="back" href="../index.html">&larr; All projects</a>
 
   <article class="notes">
     <h1>Roadworks</h1>
@@ -23,7 +23,7 @@
     </div>
 
     <p class="lead">You play a county manager. A new work board appears every morning, you dispatch crews to it, and the whole office works the same board. The more crews on a job, the faster it closes.</p>
-    <p>The bet was that the real data is the game. Every mechanic either makes the daily board more interesting to act on or gives you a reason to come back tomorrow. Anything that could have existed in a generic clicker got cut.</p>
+    <p>The bet was that the real data is the game. Every mechanic either makes the daily board more interesting to act on or gives you a reason to come back tomorrow.</p>
 
     <figure>
       <img src="../shots/roadworks.png" alt="The Roadworks board: a map of West Virginia covered in colored work orders, with a queue of jobs on the right and a leaderboard on the left." width="1280" height="720">
@@ -34,15 +34,20 @@
     <p>The roads are real, taken from measured public state GIS centerlines, so a work zone sits at genuine milepoints on a road that exists and a crew drives an actual route to reach it. The garages are real locations under invented names, because a crew rolling out of a garage that is really there is the whole appeal. The weather is real, driven by live National Weather Service alerts.</p>
     <p>The work itself is invented, placed at generated milepoints from a generic maintenance catalog. Nothing is copied from anyone's published schedule. It is an unofficial hobby project and reads public open data only.</p>
 
+    <h2>Dispatching</h2>
+    <p>Click a segment on the map or a card in the queue. Crews drive a real route from the nearest garage in the district, work the job, then deadhead home before they are free again.</p>
+    <p>Effort is counted in crew-seconds, and crews stacked on one job work faster together, up to a cap of triple. Everyone who contributed shares the experience and the budget. The rule I would not break: no mechanic is allowed to make you unhappy to see another crew show up on your job. Competition happens between districts and never inside a job.</p>
+
+    <h2>Rank and territory</h2>
+    <p>Your county is who you are and working it pays 25% more. Your district is where you are allowed to work. Incidents are statewide, because emergencies do not respect district lines.</p>
+    <p>Ranks run from Flagger up to Highway Director and they gate the interface itself. Overtime does not appear until Foreman, the equipment garage until County Supervisor. A new player sees the map, the queue and the leaderboard, and that is all. Budget buys overtime, double shifts, hired contractors and permanent equipment.</p>
+
+    <h2>Storm mode and dailies</h2>
+    <p>When the weather service has counties under a warning, incidents concentrate there, take their character from the weather and pay double. Winter warnings spawn plow work in priority order, interstates first, then US routes, then state routes. This is my favorite part of the project, because the game gets more interesting on days I had nothing to do with.</p>
+    <p>On top of that sit a check-in streak, county quotas, commendations, a rotating focus category, convoy bonuses and radio pings.</p>
+
     <h2>No game server</h2>
-    <p>There is no resident process anywhere in this project. The browser talks to Postgres, every mutation is a security definer procedure, and progress comes from timestamps instead of a tick loop. One scheduled job builds each day's board and another watches the weather. In between, nothing runs.</p>
-
-    <h2>The crowd multiplier</h2>
-    <p>Effort is counted in crew-seconds, and crews stacked on one job work faster together, up to a cap of triple. Everybody who contributed shares the experience and the budget.</p>
-    <p>The rule I would not break: no mechanic is allowed to make you unhappy to see another crew show up on your job. Competition happens between districts and never inside a job. Several decent ideas failed that test and got thrown out.</p>
-
-    <h2>Storm mode</h2>
-    <p>When the weather service has counties under a warning, incidents concentrate there, take their character from the weather and pay double. Winter warnings spawn plow work in priority order, interstates first. This is my favorite part of the project, because the game gets more interesting on days I had nothing to do with.</p>
+    <p>There is no resident process anywhere in this project. The browser talks to Postgres, every mutation is a security definer procedure, and progress comes from timestamps instead of a tick loop. One scheduled job builds each day's board and another watches the weather. The board is seeded from the date, so a given day always generates the same board no matter how many times the job fires.</p>
   </article>
 </div>
 
