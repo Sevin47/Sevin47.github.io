@@ -40,11 +40,25 @@ async function repoMeta(owner, repo) {
   }
 }
 
-async function isLive(url) {
-  try {
-    const r = await fetch(url, { method: 'HEAD', redirect: 'follow' });
-    return r.ok;
-  } catch { return false; }
+// Only report a site as down after several consecutive failures. A single
+// blip used to be enough to stamp a false "not responding" on a live game.
+async function isLive(url, attempts = 3) {
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 15000);
+      // GET, not HEAD: some hosts answer HEAD differently or not at all.
+      const r = await fetch(url, { redirect: 'follow', signal: ctl.signal,
+        headers: { 'user-agent': 'sevin47-hub-build' } });
+      clearTimeout(timer);
+      if (r.ok) return true;
+      console.warn(`  . ${url} attempt ${i}: HTTP ${r.status}`);
+    } catch (e) {
+      console.warn(`  . ${url} attempt ${i}: ${e.name === 'AbortError' ? 'timed out' : e.message}`);
+    }
+    if (i < attempts) await new Promise(r => setTimeout(r, 3000 * i));
+  }
+  return false;
 }
 
 function card(p, i, meta) {
