@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gielinor Deeds: build notes</title>
+<meta name="description" content="How Gielinor Deeds works: 29,766 ownable parcels classified from the Old School RuneScape cache, survey charges earned from XP, and an optional Deed Locked run.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; All projects</a>
+
+  <article class="notes">
+    <h1>Gielinor Deeds</h1>
+    <p class="standfirst">Own the ground you stand on.</p>
+
+    <div class="toolbar">
+      <a class="play" href="https://runelite.net/plugin-hub/show/gielinor-deeds">Get it</a>
+      <a class="quiet" href="https://github.com/Sevin47/gielinor-deeds">Source</a>
+      <a class="quiet" href="../index.html">All projects</a>
+    </div>
+
+    <p class="lead">A single-player land game played over the real Old School RuneScape map. Gielinor is cut into 115,200 parcels of 8x8 tiles, 29,766 of which can be owned. Every one was classified from the game's own cache, so the Varrock square is Capital, the fields around Lumbridge are Farmland, and scorched ground is Wasteland, each priced accordingly.</p>
+    <p>Nothing leaves your PC. No account, no server, no network traffic of any kind. Your estate is saved in RuneLite's own settings on your computer.</p>
+
+    <figure>
+      <img src="../shots/gielinor-deeds-estate.png" alt="An Old School RuneScape scene with a parcel outlined on the ground reading Capital, 1265 to buy, beside the plugin's Estate panel showing balance, income, charges and the deed underfoot." width="1015" height="472">
+      <figcaption>The Estate tab, standing on an unbought Capital deed.</figcaption>
+    </figure>
+
+    <h2>Deed Locked</h2>
+    <p>The challenge run. It is off by default, and turning it on starts it wherever you happen to be standing.</p>
+    <p>You get that one deed and three survey charges. Everything else is dark. A charge reveals a neighboring deed and its price, and buying one is what lets you survey past it, so the map opens outward from your estate a deed at a time.</p>
+    <p>Two things drive the run and neither advances on its own. Survey charges come from XP and from leveling up, and nothing else. Money comes from rent on the land you already own.</p>
+    <p>Nothing blocks movement. The veil hides ground and the menu filter can refuse clicks if you ask it to, but you can always walk out. The run is on your honor.</p>
+    <p>With Deed Locked off the whole map is visible, you survey wherever you stand, and survey range upgrades become worth buying. Land is bought for its own sake.</p>
+
+    <h2>Surveying</h2>
+    <p>A survey takes five seconds and costs one charge. Right-click the ground and pick Survey deed, or use the button in the side panel for the deed under your feet. It is never the left-click action, so a stray click cannot spend a charge.</p>
+    <p>Charges come from playing. XP pays at a rate scaled to the level of the skill that earned it, capped at eight an hour so efficient training cannot outpace ordinary play. Leveling up pays on top of that cap.</p>
+
+    <h2>Rent</h2>
+    <p>Land pays rent every second. Time logged out pays a quarter of the normal rate, capped at eight hours, and you are told what you earned when you come back. Prices climb as your estate grows, so there is always something to save for.</p>
+
+    <h2>The sidebar</h2>
+    <p>Estate is what you are doing right now: balance, income, charges, and the deed under your feet with the button to survey or buy it.</p>
+    <p>Deeds is the map. Your holdings are grouped by kingdom and collapsed, so a large estate reads as a handful of rows rather than hundreds. Below that, the Deed Log tracks how much of each of the 18 kingdoms and 15 district types you have seen, and which of the 66 landmarks you have found.</p>
+
+    <figure>
+      <img src="../shots/gielinor-deeds-deeds.png" alt="The Deeds tab, showing holdings grouped under Misthalin and a Gielinor progress panel counting surveyed parcels, kingdoms and district types." width="991" height="440">
+      <figcaption>The Deeds tab: holdings by kingdom, over progress across Gielinor.</figcaption>
+    </figure>
+
+    <p class="wide" style="color:var(--muted);font-size:.9rem;margin-top:2.5rem">Available on the RuneLite Plugin Hub. BSD 2-Clause licensed. Not affiliated with or endorsed by Jagex.</p>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">github.com/Sevin47</a></div>
+</footer>
+
+</body>
+</html>

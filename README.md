@@ -102,5 +102,5 @@ system setting. All foreground and background pairs clear WCAG AA.
 
 ## Not listed yet
 
-Bond Flipper, Gielinor Deeds and the OSRS land cover tool. Waiting on the
-plugin hub.
+The OSRS land cover tool. Bond Flipper is shelved and is deliberately not
+mentioned anywhere on the site.

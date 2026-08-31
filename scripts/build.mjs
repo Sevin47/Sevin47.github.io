@@ -76,9 +76,11 @@ console.log(`Building ${data.projects.length} project rows`);
 const cards = [];
 for (const [i, p] of data.projects.entries()) {
   const meta = await repoMeta(owner, p.repo);
-  meta.live = await isLive(p.live);
+  // Some destinations (the RuneLite plugin hub) answer 404 to a plain HTTP
+  // client even when the page is fine, so they opt out of the check.
+  meta.live = p.checkLive === false ? null : await isLive(p.live);
   p.ownerRepo = `${owner}/${p.repo}`;
-  console.log(`  ${p.title.padEnd(24)} pushed ${ago(meta.pushed) ?? '?'}, live ${meta.live ? 'yes' : 'NO'}`);
+  console.log(`  ${p.title.padEnd(24)} pushed ${ago(meta.pushed) ?? '?'}, live ${meta.live === null ? 'not checked' : meta.live ? 'yes' : 'NO'}`);
   cards.push(card(p, i, meta));
 }
 

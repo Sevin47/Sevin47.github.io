@@ -66,6 +66,18 @@
       "kind": "Tool · Three.js · local first",
       "blurb": "A project tracker drawn as a personal galaxy. Every project is a planet, every finished task is a piece of it, and everything still open orbits as dust.",
       "alt": "Orrery: named planets of different sizes arranged around a central light in a dark starfield."
+    },
+    {
+      "repo": "gielinor-deeds",
+      "title": "Gielinor Deeds",
+      "page": "projects/gielinor-deeds.html",
+      "live": "https://runelite.net/plugin-hub/show/gielinor-deeds",
+      "checkLive": false,
+      "shot": "shots/gielinor-deeds.png",
+      "cta": "Get it",
+      "kind": "RuneLite plugin · Java · fully offline",
+      "blurb": "Own the ground you stand on. A single-player land game over the real Old School RuneScape map, where 29,766 ownable parcels were each classified and priced from the game's own cache.",
+      "alt": "Gielinor Deeds: an Old School RuneScape scene with a parcel outlined on the ground, and the plugin's Estate panel showing balance, income and the deed underfoot."
     }
   ]
 }
