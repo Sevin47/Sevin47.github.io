@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phago: build notes</title>
+<meta name="description" content="How Phago works: you steer a cytokine beacon rather than a cell, every pathogen species has its own objective against the host, and mass decides what the swarm can eat.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; All projects</a>
+
+  <article class="notes">
+    <h1>Phago</h1>
+    <p class="standfirst">A white blood cell swarm roguelite.</p>
+
+    <div class="toolbar">
+      <a class="play" href="https://sevin47.github.io/phago/">Play it</a>
+      <a class="quiet" href="https://github.com/Sevin47/phago">Source</a>
+      <a class="quiet" href="../index.html">All projects</a>
+    </div>
+
+    <p class="lead">You do not control cells. You control a cytokine beacon, which is your cursor, and the swarm of leukocytes reads the gradient and chases it. The pathogens are not chasing you either. Every species carries its own objective against the host, and you are the interceptor.</p>
+    <p>One HTML file on a canvas. No server, no build step, no dependencies.</p>
+
+    <figure>
+      <img src="../shots/phago.png" alt="A glowing swarm of white blood cells in a blood vessel, surrounded by dark red erythrocytes and green pathogens, with host integrity and swarm readouts across the top." width="1280" height="720">
+      <figcaption>Wave one. Twenty-one nodes holding formation, seven pathogens loose in the vessel.</figcaption>
+    </figure>
+
+    <h2>The swarm is a shape</h2>
+    <p>Moving the mouse moves the beacon and the swarm follows. Holding the left button compresses it into a dense ramming ball, and holding the right button disperses it into a wide filter net. That single dial, tight against loose, is most of the moment-to-moment play, because a compressed swarm hits one target hard and a dispersed one covers ground.</p>
+    <p>Three volleys sit on top of it. Opsonin tags targets, strips capsules and doubles digestion. Agglutination cross-links pathogens into slow clumps. Oxidative burst is an area attack that costs 16% of your own integrity, so it is always a trade.</p>
+
+    <h2>Mass decides what you can eat</h2>
+    <p>Engulfing is gated on mass. The game sums the engulf power of every node touching a target, plus a reduced contribution from nodes within reach of a pseudopod, and if that total is under the threshold nothing happens. The target just shows how much mass you have against how much you need. Clear the bar and an encirclement ring fills instead.</p>
+    <p>Because contact damage softens big prey as it lands, a target that was too heavy a moment ago becomes edible once the swarm has worn it down. Small prey is swallowed on touch.</p>
+    <p>Eating is not free. The node that swallowed something carries a vacuole while it digests, moves 42% slower, and can have the vacuole ruptured by a hit, which releases the pathogen enraged.</p>
+
+    <h2>Every species wants something different</h2>
+    <p>Most go for red cells, and losing erythrocytes feeds back on you directly, since oxygen scales swarm speed. Let hemolysis run and the swarm slows down exactly when it can least afford it.</p>
+
+    <div class="scroll">
+    <table class="data">
+      <tr><th>Species</th><th>After</th><th>What makes it awkward</th></tr>
+      <tr><td>Streptococcus</td><td>Red cells</td><td>Plain hemolysis, the baseline drain</td></tr>
+      <tr><td>Salmonella</td><td>Red cells</td><td>Detonates inside whichever cell swallows it, unless you tag it first</td></tr>
+      <tr><td>Merozoite</td><td>Red cells</td><td>Invades a red cell, incubates, then bursts into two daughters</td></tr>
+      <tr><td>Staph. aureus</td><td>Red cells</td><td>Ranged pores that permanently cut a node's maximum health</td></tr>
+      <tr><td>Pseudomonas</td><td>The swarm</td><td>Latches on, suppresses division and drains banked biomass</td></tr>
+      <tr><td>Clostridium</td><td>Vessel wall</td><td>Chews the wall into breaches and leaves ground that will not heal</td></tr>
+      <tr><td>Aspergillus</td><td>Open lumen</td><td>Roots down and grows a mat that physically blocks the swarm</td></tr>
+      <tr><td>Biofilm colony</td><td>Red cells</td><td>Buds daughters, enrages when hurt, floods endotoxin on death</td></tr>
+    </table>
+    </div>
+
+    <h2>The host is the clock</h2>
+    <p>Host integrity is the real fail state. It drains from every red cell lysed, every breached wall segment and every fungal mat left standing, and it repairs between waves. Losing the whole swarm also ends the run, though while any node survives the marrow keeps making more, and it speeds up when the swarm is far below capacity so a bad wave stays a setback.</p>
+    <p>Balance was tuned against an instrumented autopilot rather than by feel, running a dozen full games per iteration and recording host loss per wave attributed by cause. A near-optimal autopilot reaches wave 15 to 17 and dies to host failure rather than losing its swarm. Playing it by hand, expect somewhere around wave 10 to 14.</p>
+
+    <h2>Synergies you build toward</h2>
+    <p>These are not cards you pick. Invest far enough in two lineages and the synergy switches itself on. Neutrophil and macrophage together make prey caught in a chromatin web yield double biomass and digest with no speed penalty. Macrophage and T-lymphocyte make finishing a heavyweight display its antigen, which doubles damage against that entire species for a while. Neutrophil and T-lymphocyte make every execution seed web traps on everything caught in the blast.</p>
+    <p>Level-up cards that would complete one are badged, so you can steer toward them on purpose.</p>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap"><a href="../index.html">All projects</a> &middot; <a href="https://github.com/Sevin47">github.com/Sevin47</a></div>
+</footer>
+
+</body>
+</html>

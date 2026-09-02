@@ -89,6 +89,64 @@ const TARGETS = [
     },
   },
   {
+    name: 'phago',
+    url: 'https://sevin47.github.io/phago/',
+    // Canvas game with no exposed state, so the frame is composed by feel:
+    // fly the beacon around to get the swarm moving, dismiss any level-up
+    // card that covers the view, then steer off whichever vessel wall the
+    // camera is pinned against, since that leaves a dead black band.
+    async drive(page) {
+      const sleep = ms => new Promise(r => setTimeout(r, ms));
+      await sleep(3500);
+      await clickText(page, /begin response/);
+      await sleep(2000);
+
+      const dismiss = () => page.evaluate(() => {
+        const ov = [...document.querySelectorAll('.ov.show')].filter(o => o.id !== 'menu');
+        for (const o of ov) {
+          const btn = o.querySelector('button,.card,[role=button]');
+          if (btn) { btn.click(); return true; }
+        }
+        return false;
+      });
+
+      // outside the vessel reads as near pure black; the lumen is dark maroon
+      const bands = () => page.evaluate(() => {
+        const c = document.querySelector('canvas'), g = c.getContext('2d', { willReadFrequently: true });
+        const strip = (y0, y1) => {
+          const d = g.getImageData(0, y0, c.width, y1 - y0).data;
+          let k = 0, n = 0;
+          for (let i = 0; i < d.length; i += 4 * 53) { n++; if (d[i] + d[i+1] + d[i+2] < 25) k++; }
+          return k / n;
+        };
+        const h = c.height;
+        return { top: strip(0, Math.round(h * 0.18)), bot: strip(Math.round(h * 0.82), h) };
+      });
+
+      for (let i = 0; i < 90; i++) {
+        const t = i / 90 * Math.PI * 2 * 2;
+        await page.mouse.move(640 + Math.cos(t) * 300, 380 + Math.sin(t) * 120);
+        if (i % 6 === 0) await dismiss();
+        await sleep(500);
+      }
+
+      let y = 380;
+      for (let i = 0; i < 10; i++) {
+        const { top, bot } = await bands();
+        if (top < 0.30 && bot < 0.30) break;
+        y = Math.max(90, Math.min(640, y + (bot > top ? -70 : 70)));
+        await page.mouse.move(640, y);
+        await sleep(3000);
+        await dismiss();
+      }
+
+      await sleep(2000);
+      await page.mouse.down();   // compress the swarm for the shot
+      await sleep(1300);
+    },
+    async after(page) { await page.mouse.up(); },
+  },
+  {
     name: 'orrery',
     url: 'https://sevin47.github.io/orrery/',
     // Renders an empty galaxy with no data, so seed a demo one. This only ever
@@ -151,6 +209,7 @@ for (const t of wanted) {
     await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 }).catch(() => {});
     await t.drive(page);
     await page.screenshot({ path: path.join(OUT, `${t.name}.png`) });
+    if (t.after) await t.after(page);
     console.log(`  ok    ${t.name}`);
   } catch (e) {
     console.error(`  FAIL  ${t.name}: ${e.message.slice(0, 120)}`);

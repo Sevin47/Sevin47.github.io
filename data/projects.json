@@ -78,6 +78,17 @@
       "kind": "RuneLite plugin · Java · fully offline",
       "blurb": "Own the ground you stand on. A single-player land game over the real Old School RuneScape map, where 29,766 ownable parcels were each classified and priced from the game's own cache.",
       "alt": "Gielinor Deeds: an Old School RuneScape scene with a parcel outlined on the ground, and the plugin's Estate panel showing balance, income and the deed underfoot."
+    },
+    {
+      "repo": "phago",
+      "title": "Phago",
+      "page": "projects/phago.html",
+      "live": "https://sevin47.github.io/phago/",
+      "shot": "shots/phago.png",
+      "cta": "Play",
+      "kind": "Game · one HTML file · no dependencies",
+      "blurb": "A white blood cell swarm roguelite. You are not a cell, you are the cytokine beacon the swarm chases, and the pathogens are not hunting you. They are hunting the host.",
+      "alt": "Phago: a glowing swarm of white blood cells in a blood vessel, surrounded by red cells and green pathogens, with host integrity and swarm readouts across the top."
     }
   ]
 }
