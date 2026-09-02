@@ -89,6 +89,17 @@
       "kind": "Game · one HTML file · no dependencies",
       "blurb": "A white blood cell swarm roguelite. You are not a cell, you are the cytokine beacon the swarm chases, and the pathogens are not hunting you. They are hunting the host.",
       "alt": "Phago: a glowing swarm of white blood cells in a blood vessel, surrounded by red cells and green pathogens, with host integrity and swarm readouts across the top."
+    },
+    {
+      "repo": "claude-desktop-switcher",
+      "title": "Claude Account Switcher",
+      "page": "projects/claude-switcher.html",
+      "live": "https://github.com/Sevin47/claude-desktop-switcher",
+      "shot": "shots/claude-switcher.png",
+      "cta": "Get it",
+      "kind": "Tool · PowerShell · Windows only",
+      "blurb": "Keep two Claude accounts signed in at once and switch between them in about a second, with no re-login. Move a conversation across, or fail over automatically when one hits its rate limit.",
+      "alt": "A diagram of the switcher: two saved profiles, personal and work, either side of a swap arrow, above the six files on disk that get exchanged."
     }
   ]
 }

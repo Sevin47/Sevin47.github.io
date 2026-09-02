@@ -61,6 +61,15 @@ async function isLive(url, attempts = 3) {
   return false;
 }
 
+// Skip a Source link that would just repeat the primary button, which happens
+// when a project has no home of its own outside GitHub.
+function sourceLink(p) {
+  const repo = `https://github.com/${p.ownerRepo}`;
+  if (p.live.replace(/\/$/, '') === repo) return '';
+  return `
+          <a class="quiet" href="${esc(repo)}">Source</a>`;
+}
+
 function card(p, i, meta) {
   const n = String(i + 1).padStart(2, '0');
   const updated = ago(meta.pushed);
@@ -76,8 +85,7 @@ function card(p, i, meta) {
         <p class="kind">${esc(p.kind)}</p>${stamp}${dead}
         <div class="links">
           <a class="play" href="${esc(p.live)}">${esc(p.cta)}</a>
-          <a class="quiet" href="${esc(p.page)}">Build notes</a>
-          <a class="quiet" href="https://github.com/${esc(p.ownerRepo)}">Source</a>
+          <a class="quiet" href="${esc(p.page)}">Build notes</a>${sourceLink(p)}
         </div>
       </div>
     </article>`;
